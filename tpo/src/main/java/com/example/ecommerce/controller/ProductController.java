@@ -20,6 +20,11 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @GetMapping("/")
+    public String home() {
+        return "Spring Boot App is running";
+    }
+
     @GetMapping("/allproducts")
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
@@ -38,22 +43,22 @@ public class ProductController {
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
-    String folder = "upload/images/";
-    try {
-        byte[] bytes = file.getBytes();
-        Path directoryPath = Paths.get(folder);
-        
-        // Ensure directory existence
-        if (!Files.exists(directoryPath)) {
-            Files.createDirectories(directoryPath);
+        String folder = "upload/images/";
+        try {
+            byte[] bytes = file.getBytes();
+            Path directoryPath = Paths.get(folder);
+            
+            // Ensure directory existence
+            if (!Files.exists(directoryPath)) {
+                Files.createDirectories(directoryPath);
+            }
+            
+            Path path = directoryPath.resolve(file.getOriginalFilename());
+            Files.write(path, bytes);
+            return ResponseEntity.ok("File uploaded successfully: " + path.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to upload file: " + e.getMessage());
         }
-        
-        Path path = directoryPath.resolve(file.getOriginalFilename());
-        Files.write(path, bytes);
-        return ResponseEntity.ok("File uploaded successfully: " + path.toString());
-    } catch (IOException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(500).body("Failed to upload file: " + e.getMessage());
     }
-}
 }
