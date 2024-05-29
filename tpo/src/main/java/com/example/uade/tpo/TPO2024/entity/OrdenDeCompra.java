@@ -9,17 +9,16 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Fiesta {
+public class OrdenDeCompra {
 
-    public Fiesta() {
+    public OrdenDeCompra() {
 
     }
 
-    public Fiesta(String name, String image, double newPrice, boolean available) {
+    public OrdenDeCompra(String name, String email, String password) {
         this.name = name;
-        this.image = image;
-        this.newPrice = newPrice;
-        this.available = available;
+        this.email = email;
+        this.password = password;
     }
 
     @Id
@@ -30,16 +29,11 @@ public class Fiesta {
     private String name;
 
     @Column
-    private String image;
+    private String email;
 
     @Column
-    private String category;
+    private String password;
 
     @Column
-    private double newPrice;
-
-    private double oldPrice;
-
-    @Column
-    private boolean available;
+    private String role;
 }

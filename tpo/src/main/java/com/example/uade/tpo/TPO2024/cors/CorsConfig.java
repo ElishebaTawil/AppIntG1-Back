@@ -1,4 +1,4 @@
-package com.example.ecommerce.cors;
+package com.example.uade.tpo.TPO2024.cors;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
