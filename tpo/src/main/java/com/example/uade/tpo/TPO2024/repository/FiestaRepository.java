@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.example.uade.tpo.TPO2024.entity.Fiesta;
 
 @Repository
-public interface ProductRepository extends MongoRepository<Fiesta, String> {
+public interface FiestaRepository extends MongoRepository<Fiesta, String> {
 }
