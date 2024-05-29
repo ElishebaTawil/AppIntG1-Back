@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("users")
@@ -43,9 +44,19 @@ public class UserController {
     @PostMapping
     public ResponseEntity<Object> createUser(@RequestBody User userRequest)
             throws UserDuplicateException {
-        User result = userService.creatUser(userRequest.getEmail(),
+        User result = userService.createUser(userRequest.getEmail(),
                 userRequest.getName(), userRequest.getPassword());
         return ResponseEntity.created(URI.create("/users/" + result.getId())).body(result);
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<Optional<User>> updateUser(@PathVariable Long userId) {
+        Optional<User> result = userService.getUserById(userId);
+        if (result.isPresent())
+            return ResponseEntity.created(URI.create("/users/" + result.get())).body(result);
+
+        return ResponseEntity.noContent().build();
+
     }
 
 }

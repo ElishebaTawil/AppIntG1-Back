@@ -31,4 +31,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(new User(name, email, password));
     }
 
+    public void updateUser() {
+
+    }
+
+    public void removeUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
 }

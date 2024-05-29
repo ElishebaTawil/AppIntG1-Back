@@ -1,5 +1,7 @@
 package com.example.uade.tpo.TPO2024.entity;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,10 +17,11 @@ public class OrdenDeCompra {
 
     }
 
-    public OrdenDeCompra(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
+    public OrdenDeCompra(Long id, Long idUsuario, List<Fiesta> fiestas, int montoTotal) {
+        this.id = id;
+        this.idUsuario = idUsuario;
+        this.fiestas = fiestas;
+        this.montoTotal = montoTotal;
     }
 
     @Id
@@ -26,14 +29,12 @@ public class OrdenDeCompra {
     private Long id;
 
     @Column
-    private String name;
+    private Long idUsuario;
 
     @Column
-    private String email;
+    private List<Fiesta> fiestas;
 
     @Column
-    private String password;
+    private int montoTotal;
 
-    @Column
-    private String role;
 }

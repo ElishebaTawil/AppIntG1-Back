@@ -1,6 +1,9 @@
 package com.example.uade.tpo.TPO2024.controllers;
 
 import com.example.uade.tpo.TPO2024.entity.Fiesta;
+import com.example.uade.tpo.TPO2024.entity.User;
+import com.example.uade.tpo.TPO2024.exceptions.FiestaDuplicateException;
+import com.example.uade.tpo.TPO2024.exceptions.UserDuplicateException;
 import com.example.uade.tpo.TPO2024.service.FiestaServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,7 +23,7 @@ import java.util.List;
 public class FiestaController {
 
     @Autowired
-    private FiestaServiceImpl productService;
+    private FiestaServiceImpl fiestaService;
 
     @GetMapping("/")
     public String home() {
@@ -28,17 +32,20 @@ public class FiestaController {
 
     @GetMapping("/allfiestas")
     public List<Fiesta> getAllProducts() {
-        return productService.getAllFiestas();
+        return fiestaService.getFiestas();
     }
 
-    @PostMapping("/addfiesta")
-    public Fiesta addFiesta(@RequestBody Fiesta fiesta) {
-        return productService.addFiesta(fiesta);
+    @PostMapping
+    public ResponseEntity<Object> createFiesta(@RequestBody Fiesta fiestaRequest)
+            throws FiestaDuplicateException {
+        Fiesta result = fiestaService.createFiesta(fiestaRequest.getName(),
+                fiestaRequest.getImage(), fiestaRequest.getNewPrice(), fiestaRequest.isAvailable());
+        return ResponseEntity.created(URI.create("/users/" + result.getId())).body(result);
     }
 
-    @PostMapping("/removefiesta")
-    public ResponseEntity<?> removeFiesta(@RequestBody String id) {
-        productService.removeFiesta(id);
+    @DeleteMapping("/{fiestaId}")
+    public ResponseEntity<?> removeFiesta(@RequestBody Long fiestaId) {
+        fiestaService.removeFiesta(fiestaId);
         return ResponseEntity.ok().build();
     }
 
