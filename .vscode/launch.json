@@ -9,6 +9,16 @@
             "projectName": "TPO2024",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-EcommerceApplication<TPO2024>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.ecommerce.EcommerceApplication",
+            "projectName": "TPO2024",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

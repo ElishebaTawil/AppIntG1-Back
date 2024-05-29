@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,15 +39,13 @@ public class UserController {
 
         return ResponseEntity.noContent().build();
     }
-    /*
-     * @PostMapping
-     * public ResponseEntity<Object> createUser(@RequestBody UserRequest
-     * userRequest)
-     * throws UserDuplicateException {
-     * User result = userService.createUser(userRequest.getEmail(),
-     * userRequest.getName(), userRequest.getPassword());
-     * return ResponseEntity.created(URI.create("/users/" +
-     * result.getId())).body(result);
-     * }
-     */
+
+    @PostMapping
+    public ResponseEntity<Object> createUser(@RequestBody User userRequest)
+            throws UserDuplicateException {
+        User result = userService.creatUser(userRequest.getEmail(),
+                userRequest.getName(), userRequest.getPassword());
+        return ResponseEntity.created(URI.create("/users/" + result.getId())).body(result);
+    }
+
 }

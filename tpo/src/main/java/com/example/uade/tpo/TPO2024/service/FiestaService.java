@@ -1,28 +1,16 @@
 package com.example.uade.tpo.TPO2024.service;
 
-import com.example.uade.tpo.TPO2024.entity.Fiesta;
-import com.example.uade.tpo.TPO2024.repository.FiestaRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
-@Service
-public class FiestaService {
+import com.example.uade.tpo.TPO2024.entity.Fiesta;
+import com.example.uade.tpo.TPO2024.exceptions.FiestaDuplicateException;
 
-    @Autowired
-    private FiestaRepository fiestaRepository;
+public interface FiestaService {
 
-    public List<Fiesta> getAllFiestas() {
-        return fiestaRepository.findAll();
-    }
+    public List<Fiesta> getAllFiestas();
 
-    public Fiesta addFiesta(Fiesta fiesta) {
-        return fiestaRepository.save(fiesta);
-    }
+    public Fiesta createFiesta(String name, String image, double newPrice, boolean available)
+            throws FiestaDuplicateException;
 
-    public void removeFiesta(String id) {
-        fiestaRepository.deleteById(id);
-    }
+    public void removeFiesta(Long id);
 }

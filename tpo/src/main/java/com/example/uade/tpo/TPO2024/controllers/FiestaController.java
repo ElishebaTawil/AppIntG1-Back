@@ -1,7 +1,7 @@
 package com.example.uade.tpo.TPO2024.controllers;
 
 import com.example.uade.tpo.TPO2024.entity.Fiesta;
-import com.example.uade.tpo.TPO2024.service.FiestaService;
+import com.example.uade.tpo.TPO2024.service.FiestaServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import java.util.List;
 public class FiestaController {
 
     @Autowired
-    private FiestaService productService;
+    private FiestaServiceImpl productService;
 
     @GetMapping("/")
     public String home() {
