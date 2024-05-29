@@ -40,12 +40,15 @@ public class UserController {
 
         return ResponseEntity.noContent().build();
     }
-
-    @PostMapping
-    public ResponseEntity<Object> createUser(@RequestBody UserRequest userRequest)
-            throws UserDuplicateException {
-        User result = userService.createUser(userRequest.getEmail(), userRequest.getName(), userRequest.getPassword());
-        return ResponseEntity.created(URI.create("/users/" + result.getId())).body(result);
-    }
-
+    /*
+     * @PostMapping
+     * public ResponseEntity<Object> createUser(@RequestBody UserRequest
+     * userRequest)
+     * throws UserDuplicateException {
+     * User result = userService.createUser(userRequest.getEmail(),
+     * userRequest.getName(), userRequest.getPassword());
+     * return ResponseEntity.created(URI.create("/users/" +
+     * result.getId())).body(result);
+     * }
+     */
 }
