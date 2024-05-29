@@ -12,6 +12,9 @@ public interface UserService {
 
     public Optional<User> getUserById(Long userId);
 
-    public User creatUser(String name, String email, String password) throws UserDuplicateException;
+    public User createUser(String name, String email, String password) throws UserDuplicateException;
 
+    public User updateUser(Long id);
+
+    public void removeUser(Long id);
 }
