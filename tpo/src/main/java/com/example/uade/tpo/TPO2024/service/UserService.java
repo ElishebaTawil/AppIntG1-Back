@@ -14,8 +14,6 @@ public interface UserService {
 
     public User createUser(String name, String email, String password) throws UserDuplicateException;
 
-    public boolean checkPassword(String email, String password);
-
     // public User updateUser(Long id);
 
     public void removeUser(Long id);
