@@ -13,7 +13,7 @@ public interface OrdenDeCompraService {
 
     public Optional<OrdenDeCompra> getOrdenById(Long ordenId);
 
-    public OrdenDeCompra createOrden(Long ordenId, Long idUsuario, List<Fiesta> fiestas, int montoTotal)
+    public OrdenDeCompra createOrden(Long ordenId, List<Fiesta> fiestas, int montoTotal)
             throws OrdenDuplicateException;
 
     // public OrdenDeCompra updateOrden(Long id);

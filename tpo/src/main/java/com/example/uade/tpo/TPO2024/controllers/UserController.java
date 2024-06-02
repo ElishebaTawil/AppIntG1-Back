@@ -9,6 +9,7 @@ import com.example.uade.tpo.TPO2024.exceptions.UserDuplicateException;
 import com.example.uade.tpo.TPO2024.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,21 +47,23 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<Object> createUser(@RequestBody User userRequest)
             throws UserDuplicateException {
-        User result = userService.createUser(userRequest.getEmail(),
-                userRequest.getName(), userRequest.getPassword());
+        User result = userService.createUser(userRequest.getName(),
+                userRequest.getEmail(), userRequest.getPassword(), userRequest.getRole());
         return ResponseEntity.created(URI.create("/users/" + result.getId())).body(result);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Object> loginUser(@RequestParam String email, @RequestParam String password) {
-        boolean loginSuccess = userService.checkPassword(email, password);
-        if (loginSuccess) {
-            return ResponseEntity.ok("Usuario ya registrado");
-        } else {
-            return ResponseEntity.status(401).body("Email o Contraseña incorrecta");
-        }
-    }
-
+    /*
+     * @PostMapping("/login")
+     * public ResponseEntity<Object> loginUser(@RequestParam String
+     * email, @RequestParam String password) {
+     * boolean loginSuccess = userService.checkPassword(email, password);
+     * if (loginSuccess) {
+     * return ResponseEntity.ok("Usuario ya registrado");
+     * } else {
+     * return ResponseEntity.status(401).body("Email o Contraseña incorrecta");
+     * }
+     * }
+     */
     @PutMapping("/{userId}")
     public ResponseEntity<Optional<User>> updateUser(@PathVariable Long userId) {
         Optional<User> result = userService.getUserById(userId);
@@ -71,9 +74,14 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<?> removeUser(@RequestBody Long userId) {
-        userService.removeUser(userId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> removeUser(@PathVariable Long userId) {
+        try {
+            userService.removeUser(userId);
+            return ResponseEntity.ok("Usuario eliminado exitosamente.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: el usuario no existe.");
+        }
     }
 
 }
