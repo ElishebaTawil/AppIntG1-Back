@@ -10,19 +10,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
+@Table(name = "ordenes")
 public class OrdenDeCompra {
 
     public OrdenDeCompra() {
 
     }
 
-    public OrdenDeCompra(Long id, Long idUsuario, List<Fiesta> fiestas, int montoTotal) {
+    public OrdenDeCompra(Long id, List<Fiesta> fiestas, int montoTotal) {
         this.id = id;
-        this.idUsuario = idUsuario;
         this.fiestas = fiestas;
         this.montoTotal = montoTotal;
     }
@@ -30,9 +31,6 @@ public class OrdenDeCompra {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column
-    private Long idUsuario;
 
     @OneToMany(mappedBy = "orden")
     private List<Fiesta> fiestas;

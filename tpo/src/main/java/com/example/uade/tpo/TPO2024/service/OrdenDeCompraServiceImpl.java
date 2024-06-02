@@ -25,12 +25,12 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
         return ordenDeCompraRepository.findById(ordenId);
     }
 
-    public OrdenDeCompra createOrden(Long ordenId, Long idUsuario, List<Fiesta> fiestas, int montoTotal)
+    public OrdenDeCompra createOrden(Long ordenId, List<Fiesta> fiestas, int montoTotal)
             throws OrdenDuplicateException {
         List<OrdenDeCompra> ordenes = ordenDeCompraRepository.findAll();
         if (ordenes.stream().anyMatch(orden -> orden.getId().equals(ordenId)))
             throw new OrdenDuplicateException();
-        return ordenDeCompraRepository.save(new OrdenDeCompra(ordenId, idUsuario, fiestas, montoTotal));
+        return ordenDeCompraRepository.save(new OrdenDeCompra(ordenId, fiestas, montoTotal));
     }
 
     // public OrdenDeCompra updateOrden(Long ordenId)
