@@ -19,7 +19,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
-@RequestMapping("fiestas")
+@RequestMapping("/api/fiestas")
 public class FiestaController {
 
     @Autowired

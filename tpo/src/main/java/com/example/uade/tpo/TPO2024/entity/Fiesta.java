@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Data
@@ -42,4 +44,8 @@ public class Fiesta {
 
     @Column
     private boolean available;
+
+    @ManyToOne
+    @JoinColumn(name = "ordenDeCompra_id", nullable = false)
+    private OrdenDeCompra orden;
 }
