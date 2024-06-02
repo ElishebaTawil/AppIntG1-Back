@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
             return userRepository.save(new User(name, email, password, role));
         }
         throw new UserDuplicateException();
-
     }
 
     public void updateUser() {

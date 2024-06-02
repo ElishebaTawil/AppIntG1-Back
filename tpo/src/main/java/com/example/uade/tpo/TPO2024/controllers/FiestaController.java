@@ -7,6 +7,7 @@ import com.example.uade.tpo.TPO2024.exceptions.UserDuplicateException;
 import com.example.uade.tpo.TPO2024.service.FiestaServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/fiestas")
@@ -25,31 +27,40 @@ public class FiestaController {
     @Autowired
     private FiestaServiceImpl fiestaService;
 
-    @GetMapping("/")
-    public String home() {
-        return "Spring Boot App is running";
-    }
-
-    @GetMapping("/allfiestas")
+    @GetMapping
     public List<Fiesta> getAllProducts() {
         return fiestaService.getFiestas();
     }
 
-    @PostMapping
+    @GetMapping("/{fiestaId}")
+    public ResponseEntity<Fiesta> getFiestaById(@PathVariable Long fiestaId) {
+        Optional<Fiesta> result = fiestaService.getFiestaById(fiestaId);
+        if (result.isPresent())
+            return ResponseEntity.ok(result.get());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/agregar")
     public ResponseEntity<Object> createFiesta(@RequestBody Fiesta fiestaRequest)
             throws FiestaDuplicateException {
         Fiesta result = fiestaService.createFiesta(fiestaRequest.getName(),
                 fiestaRequest.getImage(), fiestaRequest.getNewPrice(), fiestaRequest.isAvailable());
-        return ResponseEntity.created(URI.create("/users/" + result.getId())).body(result);
+        return ResponseEntity.created(URI.create("/fiestas/" + result.getId())).body(result);
     }
 
     @DeleteMapping("/{fiestaId}")
-    public ResponseEntity<?> removeFiesta(@RequestBody Long fiestaId) {
-        fiestaService.removeFiesta(fiestaId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> removeFiesta(@PathVariable Long fiestaId) {
+        try {
+            fiestaService.removeFiesta(fiestaId);
+            return ResponseEntity.ok("Fiesta eliminada exitosamente.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: la fiesta no existe.");
+        }
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/{fiestaId}/uploadImage")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         String folder = "upload/images/";
         try {
