@@ -28,17 +28,30 @@ public class FiestaServiceImpl implements FiestaService {
         return fiestaRepository.findById(fiestaId);
     }
 
-    public Fiesta createFiesta(String name, String image, double newPrice, boolean available)
+    public Fiesta createFiesta(String name, String fecha, String ubicacion, String image, double price,
+            int cantEntradas,
+            boolean available)
             throws FiestaDuplicateException {
         List<Fiesta> fiestas = fiestaRepository.findByName(name);
         if (fiestas.isEmpty()) {
-            return fiestaRepository.save(new Fiesta(name, image, newPrice, available));
+            return fiestaRepository.save(new Fiesta(name, fecha, ubicacion, image, price, cantEntradas, available));
         }
         throw new FiestaDuplicateException();
     }
 
-    public void updateFiesta() {
-
+    public Fiesta updateFiesta(Long fiestaId, Fiesta fiestaActualizada) throws FiestaNotFoundException {
+        Optional<Fiesta> fiestaOptional = fiestaRepository.findById(fiestaId);
+        if (fiestaOptional.isPresent()) {
+            Fiesta fiestaPorActualizar = fiestaOptional.get(); // convierto de Optional a User
+            fiestaPorActualizar.setName(fiestaActualizada.getName());
+            fiestaPorActualizar.setFecha(fiestaActualizada.getFecha());
+            fiestaPorActualizar.setUbicacion(fiestaActualizada.getUbicacion());
+            fiestaPorActualizar.setImage(fiestaActualizada.getImage());
+            fiestaPorActualizar.setPrice(fiestaActualizada.getPrice());
+            fiestaPorActualizar.setAvailable(fiestaActualizada.isAvailable());
+            return fiestaRepository.save(fiestaActualizada);
+        }
+        throw new FiestaNotFoundException();
     }
 
     public void removeFiesta(Long fiestaId) throws FiestaNotFoundException {
