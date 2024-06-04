@@ -23,10 +23,14 @@ public class Fiesta {
 
     }
 
-    public Fiesta(String name, String image, double newPrice, boolean available) {
+    public Fiesta(String name, String fecha, String ubicacion, String image, double price, int cantEntradas,
+            boolean available) {
         this.name = name;
+        this.fecha = fecha;
+        this.ubicacion = ubicacion;
         this.image = image;
-        this.newPrice = newPrice;
+        this.price = price;
+        this.cantEntradas = cantEntradas;
         this.available = available;
     }
 
@@ -38,20 +42,26 @@ public class Fiesta {
     private String name;
 
     @Column
+    private String fecha;
+
+    @Column
+    private String ubicacion;
+
+    @Column
     private String image;
 
     @Column
-    private String category;
+    private double price;
 
     @Column
-    private double newPrice;
-
-    private double oldPrice;
+    private int cantEntradas;
 
     @Column
     private boolean available;
 
-    @ManyToOne
-    @JoinColumn(name = "ordenDeCompra_id", nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "orden_de_compra_id", nullable = true)
     private OrdenDeCompra orden;
+
+    private int cantidadPorFiesta;
 }

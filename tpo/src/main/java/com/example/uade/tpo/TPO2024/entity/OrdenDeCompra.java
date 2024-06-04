@@ -2,6 +2,7 @@ package com.example.uade.tpo.TPO2024.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,9 +39,6 @@ public class OrdenDeCompra {
 
     @OneToMany(mappedBy = "orden")
     private List<Fiesta> fiestas;
-
-    @Column
-    private int cantidad;
 
     @Column
     private int montoTotal;

@@ -13,10 +13,12 @@ public interface FiestaService {
 
     public Optional<Fiesta> getFiestaById(Long fiestaId);
 
-    public Fiesta createFiesta(String name, String image, double newPrice, boolean available)
+    public Fiesta createFiesta(String name, String fecha, String ubicacion, String image, double price,
+            int cantEntradas,
+            boolean available)
             throws FiestaDuplicateException;
 
-    public Fiesta updateFiesta(Long fiestaId);
+    public Fiesta updateFiesta(Long fiestaId, Fiesta fiestaActualizada) throws FiestaNotFoundException;
 
     public void removeFiesta(Long fiestaId) throws FiestaNotFoundException;
 }

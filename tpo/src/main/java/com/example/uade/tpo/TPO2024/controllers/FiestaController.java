@@ -3,7 +3,9 @@ package com.example.uade.tpo.TPO2024.controllers;
 import com.example.uade.tpo.TPO2024.entity.Fiesta;
 import com.example.uade.tpo.TPO2024.entity.User;
 import com.example.uade.tpo.TPO2024.exceptions.FiestaDuplicateException;
+import com.example.uade.tpo.TPO2024.exceptions.FiestaNotFoundException;
 import com.example.uade.tpo.TPO2024.exceptions.UserDuplicateException;
+import com.example.uade.tpo.TPO2024.exceptions.UserNotFoundException;
 import com.example.uade.tpo.TPO2024.service.FiestaServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -33,20 +36,33 @@ public class FiestaController {
     }
 
     @GetMapping("/{fiestaId}")
-    public ResponseEntity<Fiesta> getFiestaById(@PathVariable Long fiestaId) {
-        Optional<Fiesta> result = fiestaService.getFiestaById(fiestaId);
-        if (result.isPresent())
-            return ResponseEntity.ok(result.get());
-
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Fiesta> getFiestaById(@PathVariable Long fiestaId) throws FiestaNotFoundException {
+        Optional<Fiesta> fiesta = fiestaService.getFiestaById(fiestaId);
+        if (fiesta.isPresent()) {
+            return ResponseEntity.ok(fiesta.get());
+        } else {
+            throw new FiestaNotFoundException();
+        }
     }
 
     @PostMapping("/agregar")
     public ResponseEntity<Object> createFiesta(@RequestBody Fiesta fiestaRequest)
             throws FiestaDuplicateException {
         Fiesta result = fiestaService.createFiesta(fiestaRequest.getName(),
-                fiestaRequest.getImage(), fiestaRequest.getNewPrice(), fiestaRequest.isAvailable());
+                fiestaRequest.getFecha(), fiestaRequest.getUbicacion(), fiestaRequest.getImage(),
+                fiestaRequest.getPrice(), fiestaRequest.getCantEntradas(), fiestaRequest.isAvailable());
         return ResponseEntity.created(URI.create("/fiestas/" + result.getId())).body(result);
+    }
+
+    @PutMapping("/{fiestaId}")
+    public ResponseEntity<Fiesta> updateFiesta(@PathVariable Long fiestaId, @RequestBody Fiesta fiestaActualizada)
+            throws FiestaNotFoundException {
+        try {
+            Fiesta partyActualizada = fiestaService.updateFiesta(fiestaId, fiestaActualizada);
+            return ResponseEntity.ok(partyActualizada);
+        } catch (FiestaNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El id de la fiesta no existe", e);
+        }
     }
 
     @DeleteMapping("/{fiestaId}")
