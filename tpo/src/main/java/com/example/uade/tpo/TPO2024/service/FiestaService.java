@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.example.uade.tpo.TPO2024.entity.Fiesta;
 import com.example.uade.tpo.TPO2024.exceptions.FiestaDuplicateException;
+import com.example.uade.tpo.TPO2024.exceptions.FiestaNotFoundException;
 
 public interface FiestaService {
 
@@ -15,7 +16,7 @@ public interface FiestaService {
     public Fiesta createFiesta(String name, String image, double newPrice, boolean available)
             throws FiestaDuplicateException;
 
-    public Fiesta updateFiesta(Long id);
+    public Fiesta updateFiesta(Long fiestaId);
 
-    public void removeFiesta(Long id);
+    public void removeFiesta(Long fiestaId) throws FiestaNotFoundException;
 }

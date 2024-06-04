@@ -2,6 +2,7 @@ package com.example.uade.tpo.TPO2024.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,40 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> getUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserById(Long userId) {
-        return userRepository.findById(userId);
+    public List<User> getUsers() {
+
+        List<User> users = userRepository.findAll();
+
+        // Filtrar los usuarios que tienen el rol "user"
+        List<User> usersFiltrados = users.stream()
+                .filter(user -> "user".equals(user.getRole()))
+                .collect(Collectors.toList());
+
+        return usersFiltrados;
+    }
+
+    public List<User> getAdmins() {
+        List<User> users = userRepository.findAll();
+
+        // Filtrar los usuarios que tienen el rol "admin"
+        List<User> usersFiltrados = users.stream()
+                .filter(user -> "admin".equals(user.getRole()))
+                .collect(Collectors.toList());
+
+        return usersFiltrados;
+    }
+
+    public Optional<User> getUserById(Long userId) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            return user;
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 
     public User createUser(String name, String email, String password, String role) throws UserDuplicateException {
@@ -33,8 +62,17 @@ public class UserServiceImpl implements UserService {
         throw new UserDuplicateException();
     }
 
-    public void updateUser() {
-
+    public User updateUser(Long userId, User userActualizado) throws UserNotFoundException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User userPorActualizar = userOptional.get(); // convierto de Optional a User
+            userPorActualizar.setName(userActualizado.getName());
+            userPorActualizar.setEmail(userActualizado.getEmail());
+            userPorActualizar.setPassword(userActualizado.getPassword());
+            userPorActualizar.setRole(userActualizado.getRole());
+            return userRepository.save(userPorActualizar);
+        }
+        throw new UserNotFoundException();
     }
 
     public void removeUser(Long userId) throws UserNotFoundException {
