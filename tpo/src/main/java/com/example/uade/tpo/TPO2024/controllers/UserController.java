@@ -3,13 +3,16 @@ package com.example.uade.tpo.TPO2024.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.uade.tpo.TPO2024.entity.User;
 import com.example.uade.tpo.TPO2024.exceptions.UserDuplicateException;
+import com.example.uade.tpo.TPO2024.exceptions.UserNotFoundException;
 import com.example.uade.tpo.TPO2024.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
@@ -30,18 +35,40 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
     @GetMapping
     public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok(userService.getUsers());
+        List<User> users = userService.getAllUsers()
+                .stream()
+                .filter(user -> "user".equals(user.getRole()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/admins")
+    public ResponseEntity<List<User>> getAdmins() {
+        List<User> users = userService.getAllUsers()
+                .stream()
+                .filter(user -> "admin".equals(user.getRole()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
-        Optional<User> result = userService.getUserById(userId);
-        if (result.isPresent())
-            return ResponseEntity.ok(result.get());
+    public ResponseEntity<?> getUserById(@PathVariable Long userId) throws UserNotFoundException {
+        Optional<User> user = userService.getUserById(userId);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get());
+        } else {
+            throw new UserNotFoundException();
+        }
 
-        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/register")
@@ -52,25 +79,15 @@ public class UserController {
         return ResponseEntity.created(URI.create("/users/" + result.getId())).body(result);
     }
 
-    /*
-     * @PostMapping("/login")
-     * public ResponseEntity<Object> loginUser(@RequestParam String
-     * email, @RequestParam String password) {
-     * boolean loginSuccess = userService.checkPassword(email, password);
-     * if (loginSuccess) {
-     * return ResponseEntity.ok("Usuario ya registrado");
-     * } else {
-     * return ResponseEntity.status(401).body("Email o Contraseña incorrecta");
-     * }
-     * }
-     */
     @PutMapping("/{userId}")
-    public ResponseEntity<Optional<User>> updateUser(@PathVariable Long userId) {
-        Optional<User> result = userService.getUserById(userId);
-        if (result.isPresent())
-            return ResponseEntity.created(URI.create("/users/" + result.get())).body(result);
-
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User userActualizado)
+            throws UserNotFoundException {
+        try {
+            User usuarioActualizado = userService.updateUser(userId, userActualizado);
+            return ResponseEntity.ok(usuarioActualizado);
+        } catch (UserNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El id del usuario no existe", e);
+        }
     }
 
     @DeleteMapping("/{userId}")
