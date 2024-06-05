@@ -1,10 +1,16 @@
 package com.example.uade.tpo.TPO2024.entity;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -22,7 +28,7 @@ public class Fiesta {
 
     }
 
-    public Fiesta(String name, String fecha, String ubicacion, String image, double price, int cantEntradas,
+    public Fiesta(String name, String fecha, String ubicacion, String image, int price, int cantEntradas,
             boolean available) {
         this.name = name;
         this.fecha = fecha;
@@ -50,7 +56,7 @@ public class Fiesta {
     private String image;
 
     @Column
-    private double price;
+    private int price;
 
     @Column
     private int cantEntradas;
@@ -58,8 +64,11 @@ public class Fiesta {
     @Column
     private boolean available;
 
-    @OneToOne(mappedBy = "fiesta", cascade = CascadeType.ALL)
-    private FiestaAsociada fiestaAsociada;
+    // @OneToMany(mappedBy = "fiesta", cascade = CascadeType.ALL)
+    // private List<FiestaAsociada> fiestasAsociadas;
 
-    private int cantidadPorFiesta;
+    // @ManyToOne
+    // @JoinColumn(name = "orden_de_compra_id")
+    // private OrdenDeCompra ordenDeCompra;
+
 }

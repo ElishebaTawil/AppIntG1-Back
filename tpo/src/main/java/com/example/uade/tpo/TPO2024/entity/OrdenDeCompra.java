@@ -2,6 +2,8 @@ package com.example.uade.tpo.TPO2024.entity;
 
 import java.util.List;
 
+import com.example.uade.tpo.TPO2024.dto.FiestaDTO;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,8 +29,8 @@ public class OrdenDeCompra {
 
     }
 
-    public OrdenDeCompra(Long id, List<Fiesta> fiestas, int montoTotal) {
-        this.id = id;
+    public OrdenDeCompra(User user, List<FiestaDTO> fiestas, int montoTotal) {
+        this.user = user;
         this.fiestas = fiestas;
         this.montoTotal = montoTotal;
     }
@@ -37,14 +39,24 @@ public class OrdenDeCompra {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "orden")
-    private List<Fiesta> fiestas;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    // private Long userId;
+
+    // @OneToMany(mappedBy = "orden")
+    // private List<FiestaAsociada> fiestasAsociadas;
+
+    @OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL)
+    private List<FiestaDTO> fiestas;
 
     @Column
     private int montoTotal;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    // Getter para el userId
+    public Long getUserId() {
+        return user != null ? user.getId() : null;
+    }
 
 }
