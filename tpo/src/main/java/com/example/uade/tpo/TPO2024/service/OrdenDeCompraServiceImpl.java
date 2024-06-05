@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.example.uade.tpo.TPO2024.entity.User;
 import com.example.uade.tpo.TPO2024.exceptions.FiestaNotFoundException;
 import com.example.uade.tpo.TPO2024.exceptions.OrdenDuplicateException;
+import com.example.uade.tpo.TPO2024.exceptions.OrdenNotFoundException;
 import com.example.uade.tpo.TPO2024.exceptions.UserNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,10 +69,13 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
         }
     }
 
-    // public OrdenDeCompra updateOrden(Long ordenId)
-
-    public void removeOrden(Long ordenId) {
-        ordenDeCompraRepository.deleteById(ordenId);
+    public void removeOrden(Long ordenId) throws OrdenNotFoundException {
+        Optional<OrdenDeCompra> orden = ordenDeCompraRepository.findById(ordenId);
+        if (orden.isPresent()) {
+            ordenDeCompraRepository.deleteById(ordenId);
+        } else {
+            throw new OrdenNotFoundException();
+        }
     }
 
 }
