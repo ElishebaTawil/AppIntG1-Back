@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FiestaServiceImpl implements FiestaService {
@@ -26,6 +27,31 @@ public class FiestaServiceImpl implements FiestaService {
 
     public Optional<Fiesta> getFiestaById(Long fiestaId) {
         return fiestaRepository.findById(fiestaId);
+    }
+
+    public List<Fiesta> getFiestasPorPrecio(int montoMaximo) {
+        List<Fiesta> fiestas = fiestaRepository.findAll();
+
+        // Filtrar las fiestas que tienen un precio menor o igual al monto máximo
+        List<Fiesta> fiestasFiltradas = fiestas.stream()
+                .filter(f -> f.getPrice() <= montoMaximo)
+                .collect(Collectors.toList());
+
+        return fiestasFiltradas;
+    }
+
+    public List<Fiesta> getFiestasOrdenadasPorPrecioDeMenorAMayor() {
+        List<Fiesta> fiestas = fiestaRepository.findAll();
+        return fiestas.stream()
+                .sorted((f1, f2) -> Double.compare(f1.getPrice(), f2.getPrice()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Fiesta> getFiestasOrdenadasPorPrecioDeMayorAMenor() {
+        List<Fiesta> fiestas = fiestaRepository.findAll();
+        return fiestas.stream()
+                .sorted((f1, f2) -> Double.compare(f2.getPrice(), f1.getPrice()))
+                .collect(Collectors.toList());
     }
 
     public Fiesta createFiesta(String name, String fecha, String ubicacion, String image, int price,

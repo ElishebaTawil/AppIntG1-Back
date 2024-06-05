@@ -13,6 +13,12 @@ public interface FiestaService {
 
     public Optional<Fiesta> getFiestaById(Long fiestaId);
 
+    public List<Fiesta> getFiestasPorPrecio(int montoMaximo);
+
+    public List<Fiesta> getFiestasOrdenadasPorPrecioDeMenorAMayor();
+
+    public List<Fiesta> getFiestasOrdenadasPorPrecioDeMayorAMenor();
+
     public Fiesta createFiesta(String name, String fecha, String ubicacion, String image, int price,
             int cantEntradas,
             boolean available)

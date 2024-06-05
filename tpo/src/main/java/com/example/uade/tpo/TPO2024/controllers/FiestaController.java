@@ -22,6 +22,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/fiestas")
@@ -43,6 +45,21 @@ public class FiestaController {
         } else {
             throw new FiestaNotFoundException();
         }
+    }
+
+    @GetMapping("/price/{precioMaximo}")
+    public List<Fiesta> getFiestasPorPrecio(@PathVariable int precioMaximo) {
+        return fiestaService.getFiestasPorPrecio(precioMaximo);
+    }
+
+    @GetMapping("/ordenadas/menorAmayor")
+    public List<Fiesta> getFiestasOrdenadasPorPrecioDeMenorAMayor() {
+        return fiestaService.getFiestasOrdenadasPorPrecioDeMenorAMayor();
+    }
+
+    @GetMapping("/ordenadas/mayorAmenor")
+    public List<Fiesta> getFiestasOrdenadasPorPrecioDeMayorAMenor() {
+        return fiestaService.getFiestasOrdenadasPorPrecioDeMayorAMenor();
     }
 
     @PostMapping("/agregar")

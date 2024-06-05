@@ -55,7 +55,7 @@ public class OrdenDeCompraController {
         OrdenDeCompra order = ordenDeCompraService.createOrden(
                 ordenRequest.getUserId(),
                 ordenRequest.getFiestas());
-        return ResponseEntity.ok(order);
+        return ResponseEntity.created(URI.create("/ordenes/" + order.getId())).body(order);
     }
 
     @DeleteMapping("/{ordenId}")
