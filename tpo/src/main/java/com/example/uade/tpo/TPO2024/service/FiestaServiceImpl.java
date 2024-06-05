@@ -50,7 +50,7 @@ public class FiestaServiceImpl implements FiestaService {
             fiestaPorActualizar.setPrice(fiestaActualizada.getPrice());
             fiestaPorActualizar.setAvailable(fiestaActualizada.isAvailable());
             fiestaPorActualizar.setCantEntradas(fiestaActualizada.getCantEntradas());
-            return fiestaRepository.save(fiestaActualizada);
+            return fiestaRepository.save(fiestaPorActualizar);
         }
         throw new FiestaNotFoundException();
     }

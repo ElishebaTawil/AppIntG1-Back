@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.example.uade.tpo.TPO2024.dto.FiestaDTO;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -48,7 +47,7 @@ public class OrdenDeCompra {
     // @OneToMany(mappedBy = "orden")
     // private List<FiestaAsociada> fiestasAsociadas;
 
-    @OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ordenDeCompra")
     private List<FiestaDTO> fiestas;
 
     @Column
