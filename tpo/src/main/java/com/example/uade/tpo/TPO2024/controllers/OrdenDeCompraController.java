@@ -5,8 +5,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.uade.tpo.TPO2024.entity.OrdenDeCompra;
 import com.example.uade.tpo.TPO2024.entity.User;
+import com.example.uade.tpo.TPO2024.exceptions.FiestaNotFoundException;
 import com.example.uade.tpo.TPO2024.exceptions.OrdenDuplicateException;
+import com.example.uade.tpo.TPO2024.exceptions.OrdenNotFoundException;
 import com.example.uade.tpo.TPO2024.exceptions.UserDuplicateException;
+import com.example.uade.tpo.TPO2024.exceptions.UserNotFoundException;
 import com.example.uade.tpo.TPO2024.service.OrdenDeCompraService;
 import com.example.uade.tpo.TPO2024.service.UserService;
 
@@ -35,20 +38,22 @@ public class OrdenDeCompraController {
     }
 
     @GetMapping("/{ordenId}")
-    public ResponseEntity<OrdenDeCompra> getOrdenById(@PathVariable Long ordenId) {
-        Optional<OrdenDeCompra> result = ordenDeCompraService.getOrdenById(ordenId);
-        if (result.isPresent())
-            return ResponseEntity.ok(result.get());
-
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<OrdenDeCompra> getOrdenById(@PathVariable Long ordenId) throws OrdenNotFoundException {
+        Optional<OrdenDeCompra> orden = ordenDeCompraService.getOrdenById(ordenId);
+        if (orden.isPresent()) {
+            return ResponseEntity.ok(orden.get());
+        } else {
+            throw new OrdenNotFoundException();
+        }
     }
 
-    @PostMapping
-    public ResponseEntity<Object> createOrden(@RequestBody OrdenDeCompra ordenRequest)
-            throws OrdenDuplicateException {
-        OrdenDeCompra result = ordenDeCompraService.createOrden(ordenRequest.getId(), ordenRequest.getIdUsuario(),
-                ordenRequest.getFiestas(), ordenRequest.getMontoTotal());
-        return ResponseEntity.created(URI.create("/ordenes/" + result.getId())).body(result);
+    @PostMapping("/crear")
+    public ResponseEntity<OrdenDeCompra> createOrden(@RequestBody OrdenDeCompra ordenRequest)
+            throws OrdenDuplicateException, UserNotFoundException, FiestaNotFoundException {
+        OrdenDeCompra order = ordenDeCompraService.createOrden(
+                ordenRequest.getUserId(),
+                ordenRequest.getFiestas());
+        return ResponseEntity.ok(order);
     }
 
 }

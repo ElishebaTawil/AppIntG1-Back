@@ -28,7 +28,7 @@ public class FiestaServiceImpl implements FiestaService {
         return fiestaRepository.findById(fiestaId);
     }
 
-    public Fiesta createFiesta(String name, String fecha, String ubicacion, String image, double price,
+    public Fiesta createFiesta(String name, String fecha, String ubicacion, String image, int price,
             int cantEntradas,
             boolean available)
             throws FiestaDuplicateException {
@@ -49,6 +49,7 @@ public class FiestaServiceImpl implements FiestaService {
             fiestaPorActualizar.setImage(fiestaActualizada.getImage());
             fiestaPorActualizar.setPrice(fiestaActualizada.getPrice());
             fiestaPorActualizar.setAvailable(fiestaActualizada.isAvailable());
+            fiestaPorActualizar.setCantEntradas(fiestaActualizada.getCantEntradas());
             return fiestaRepository.save(fiestaActualizada);
         }
         throw new FiestaNotFoundException();

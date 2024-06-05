@@ -13,7 +13,7 @@ public interface FiestaService {
 
     public Optional<Fiesta> getFiestaById(Long fiestaId);
 
-    public Fiesta createFiesta(String name, String fecha, String ubicacion, String image, double price,
+    public Fiesta createFiesta(String name, String fecha, String ubicacion, String image, int price,
             int cantEntradas,
             boolean available)
             throws FiestaDuplicateException;
