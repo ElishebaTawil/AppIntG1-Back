@@ -14,14 +14,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
 @Entity
 @Table(name = "ordenes")
-@Getter
-@Setter
+
 public class OrdenDeCompra {
 
     public OrdenDeCompra() {
@@ -42,20 +39,10 @@ public class OrdenDeCompra {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // private Long userId;
-
-    // @OneToMany(mappedBy = "orden")
-    // private List<FiestaAsociada> fiestasAsociadas;
-
     @OneToMany(mappedBy = "ordenDeCompra")
     private List<FiestaDTO> fiestas;
 
     @Column
     private int montoTotal;
-
-    // Getter para el userId
-    public Long getUserId() {
-        return user != null ? user.getId() : null;
-    }
 
 }

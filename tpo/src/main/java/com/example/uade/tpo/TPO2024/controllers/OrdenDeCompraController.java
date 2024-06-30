@@ -53,7 +53,7 @@ public class OrdenDeCompraController {
     public ResponseEntity<OrdenDeCompra> createOrden(@RequestBody OrdenDeCompra ordenRequest)
             throws OrdenDuplicateException, UserNotFoundException, FiestaNotFoundException {
         OrdenDeCompra order = ordenDeCompraService.createOrden(
-                ordenRequest.getUserId(),
+                ordenRequest.getUser().getId(),
                 ordenRequest.getFiestas());
         return ResponseEntity.created(URI.create("/ordenes/" + order.getId())).body(order);
     }
