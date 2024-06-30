@@ -37,6 +37,7 @@ public class FiestaDTO {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "orden_id", nullable = false)
     private OrdenDeCompra ordenDeCompra;
 
     @OneToOne

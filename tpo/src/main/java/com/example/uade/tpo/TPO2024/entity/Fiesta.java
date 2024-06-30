@@ -64,11 +64,4 @@ public class Fiesta {
     @Column
     private boolean available;
 
-    // @OneToMany(mappedBy = "fiesta", cascade = CascadeType.ALL)
-    // private List<FiestaAsociada> fiestasAsociadas;
-
-    // @ManyToOne
-    // @JoinColumn(name = "orden_de_compra_id")
-    // private OrdenDeCompra ordenDeCompra;
-
 }
