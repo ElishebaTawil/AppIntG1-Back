@@ -25,8 +25,7 @@ public class OrdenDeCompra {
 
     }
 
-    public OrdenDeCompra(User user, List<FiestaDTO> fiestas, int montoTotal) {
-        this.user = user;
+    public OrdenDeCompra(List<FiestaDTO> fiestas, int montoTotal) {
         this.fiestas = fiestas;
         this.montoTotal = montoTotal;
     }
