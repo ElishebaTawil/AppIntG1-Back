@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.uade.tpo.TPO2024.entity.Role;
 import com.example.uade.tpo.TPO2024.entity.User;
 import com.example.uade.tpo.TPO2024.exceptions.UserDuplicateException;
 import com.example.uade.tpo.TPO2024.exceptions.UserNotFoundException;
@@ -54,10 +55,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public User createUser(String name, String email, String password, String role) throws UserDuplicateException {
-        List<User> users = userRepository.findByEmail(email);
+    public User createUser(String name, String email, String password, Role role) throws UserDuplicateException {
+        Optional<User> users = userRepository.findByEmail(email);
         if (users.isEmpty()) {
-            return userRepository.save(new User(name, email, password, role));
+            return userRepository.save(new User(null, name, email, password, role, null));
         }
         throw new UserDuplicateException();
     }

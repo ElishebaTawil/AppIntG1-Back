@@ -3,6 +3,7 @@ package com.example.uade.tpo.TPO2024.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.uade.tpo.TPO2024.entity.Role;
 import com.example.uade.tpo.TPO2024.entity.User;
 import com.example.uade.tpo.TPO2024.exceptions.UserDuplicateException;
 import com.example.uade.tpo.TPO2024.exceptions.UserNotFoundException;
@@ -17,7 +18,7 @@ public interface UserService {
 
     public Optional<User> getUserById(Long userId) throws UserNotFoundException;
 
-    public User createUser(String name, String email, String password, String role) throws UserDuplicateException;
+    public User createUser(String name, String email, String password, Role role) throws UserDuplicateException;
 
     public User updateUser(Long userId, User userActualizado) throws UserNotFoundException;
 
