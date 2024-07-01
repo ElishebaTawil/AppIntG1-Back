@@ -65,7 +65,7 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
                     fiestaRepository.save(fiesta);
                 }
             }
-            return ordenDeCompraRepository.save(new OrdenDeCompra(user, fiestasDTO, montoTotal));
+            return ordenDeCompraRepository.save(new OrdenDeCompra(userId, fiestasDTO, montoTotal));
         }
     }
 

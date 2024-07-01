@@ -68,7 +68,7 @@ public class FiestaServiceImpl implements FiestaService {
     public Fiesta updateFiesta(Long fiestaId, Fiesta fiestaActualizada) throws FiestaNotFoundException {
         Optional<Fiesta> fiestaOptional = fiestaRepository.findById(fiestaId);
         if (fiestaOptional.isPresent()) {
-            Fiesta fiestaPorActualizar = fiestaOptional.get(); // convierto de Optional a User
+            Fiesta fiestaPorActualizar = fiestaOptional.get(); // convierto de Optional a Fiesta
             fiestaPorActualizar.setName(fiestaActualizada.getName());
             fiestaPorActualizar.setFecha(fiestaActualizada.getFecha());
             fiestaPorActualizar.setUbicacion(fiestaActualizada.getUbicacion());

@@ -12,12 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
-@Getter
-@Setter
 @Entity
 
 public class FiestaDTO {
@@ -46,7 +42,6 @@ public class FiestaDTO {
     @Column
     private int cantidadEntradas;
 
-    @Column
     private int montoParcial; // PRECIO * CANTIDAD
 
 }
