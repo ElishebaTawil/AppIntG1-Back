@@ -2,6 +2,7 @@ package com.example.uade.tpo.TPO2024.dto;
 
 import com.example.uade.tpo.TPO2024.entity.Fiesta;
 import com.example.uade.tpo.TPO2024.entity.OrdenDeCompra;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,6 +30,7 @@ public class FiestaDTORequest {
 
     @ManyToOne
     @JoinColumn(name = "orden_id", nullable = false)
+    @JsonBackReference
     private OrdenDeCompra ordenDeCompra;
 
     @OneToOne

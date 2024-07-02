@@ -5,7 +5,9 @@ import java.util.List;
 import com.example.uade.tpo.TPO2024.dto.FiestaDTO;
 import com.example.uade.tpo.TPO2024.dto.FiestaDTORequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,7 +46,8 @@ public class OrdenDeCompra {
     @Column
     private String username;
 
-    @OneToMany(mappedBy = "ordenDeCompra")
+    @OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<FiestaDTORequest> fiestas;
 
     @Column

@@ -16,32 +16,32 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
+//@Data
+//@Builder
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Entity
 public class FiestaDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "orden_id", nullable = false)
+    // @ManyToOne
+    // @JoinColumn(name = "orden_id", nullable = false)
     private OrdenDeCompra ordenDeCompra;
 
-    @OneToOne
-    @JoinColumn(name = "fiesta_id", referencedColumnName = "id")
-    private Fiesta fiesta;
+    // @OneToOne
+    // @JoinColumn(name = "fiesta_id", referencedColumnName = "id")
+    // private Fiesta fiesta;
 
-    @Column
+    // @Column
     private String name;
 
-    @Column
+    // @Column
     private int cantidadEntradas;
 
-    @Column
+    // @Column
     private double montoParcial; // PRECIO * CANTIDAD
 
 }

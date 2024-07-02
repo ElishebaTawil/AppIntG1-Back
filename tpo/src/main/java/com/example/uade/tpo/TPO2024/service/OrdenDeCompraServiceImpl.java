@@ -13,16 +13,18 @@ import com.example.uade.tpo.TPO2024.exceptions.UserNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.uade.tpo.TPO2024.dto.FiestaDTO;
 import com.example.uade.tpo.TPO2024.dto.FiestaDTORequest;
 import com.example.uade.tpo.TPO2024.entity.Fiesta;
 import com.example.uade.tpo.TPO2024.entity.OrdenDeCompra;
 import com.example.uade.tpo.TPO2024.repository.FiestaRepository;
+
 import com.example.uade.tpo.TPO2024.repository.OrdenDeCompraRepository;
 import com.example.uade.tpo.TPO2024.repository.UserRepository;
 
 @Service
+@Transactional
 public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
 
     @Autowired
@@ -45,9 +47,6 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
     public OrdenDeCompra createOrden(String email, List<FiestaDTORequest> fiestasRequest, double descuento)
             throws OrdenDuplicateException, UserNotFoundException, FiestaNotFoundException {
 
-        // Log inicio del método
-        System.out.println("Iniciando creación de orden");
-
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty())
             throw new UserNotFoundException();
@@ -55,36 +54,41 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
             User user = optionalUser.get();
             String username = user.getName();
             double montoParcial = 0;
+            double montoTotal = 0;
 
-            // Log usuario encontrado
-            System.out.println("Usuario encontrado: " + user);
+            List<FiestaDTORequest> fiestasOrden = new ArrayList<FiestaDTORequest>();
+
+            // OrdenDeCompra ordenDeCompra = new OrdenDeCompra(null, user, email, username,
+            // new ArrayList<FiestaDTORequest>(), montoParcial, descuento, montoTotal);
 
             for (FiestaDTORequest fiestaRequest : fiestasRequest) {
+
                 String fiestaDtoName = fiestaRequest.getName();
                 Optional<Fiesta> optionalFiesta = fiestaRepository.findByName(fiestaDtoName);
                 if (optionalFiesta.isEmpty())
                     throw new FiestaNotFoundException();
                 else {
-                    System.out.println("Fiesta no encontrada: " + fiestaDtoName);
                     Fiesta fiesta = optionalFiesta.get();
                     montoParcial = montoParcial + fiesta.getPrice() * fiestaRequest.getCantidadEntradas();
                     fiesta.setCantEntradas(fiesta.getCantEntradas() - fiestaRequest.getCantidadEntradas());
-                    // Log actualización de fiesta
-                    System.out.println("Actualizando fiesta: " + fiesta);
                     fiestaRepository.save(fiesta); // acutalizo stock de entradas
 
+                    // Crear una nueva instancia de FiestaDTORequest y asociarla con la orden de
+                    // compra
+                    // FiestaDTORequest newFiestaRequest = new FiestaDTORequest();
+                    // newFiestaRequest.setOrdenDeCompra(ordenDeCompra);
+                    // newFiestaRequest.setName(fiestaRequest.getName());
+                    // newFiestaRequest.setCantidadEntradas(fiestaRequest.getCantidadEntradas());
+                    // newFiestaRequest.setMontoParcial(fiesta.getPrice() *
+                    // fiestaRequest.getCantidadEntradas());
+                    // ordenDeCompra.getFiestas().add(newFiestaRequest);
                 }
-
             }
-            double montoTotal = 0;
             montoTotal = montoParcial - descuento;
-            // Log montos calculados
-            System.out.println(
-                    "Monto parcial: " + montoParcial + ", Descuento: " + descuento + ", Monto total: " + montoTotal);
 
+            // return ordenDeCompraRepository.save(ordenDeCompra);
             return ordenDeCompraRepository.save(
-                    new OrdenDeCompra(null, user, email, username, fiestasRequest, montoParcial, descuento,
-                            montoTotal));
+                    new OrdenDeCompra(null, user, email, username, fiestasOrden, montoParcial, descuento, montoTotal));
         }
     }
 
