@@ -13,15 +13,18 @@ import com.example.uade.tpo.TPO2024.exceptions.UserNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.uade.tpo.TPO2024.dto.FiestaDTO;
+import com.example.uade.tpo.TPO2024.dto.FiestaDTORequest;
 import com.example.uade.tpo.TPO2024.entity.Fiesta;
 import com.example.uade.tpo.TPO2024.entity.OrdenDeCompra;
 import com.example.uade.tpo.TPO2024.repository.FiestaRepository;
+
 import com.example.uade.tpo.TPO2024.repository.OrdenDeCompraRepository;
 import com.example.uade.tpo.TPO2024.repository.UserRepository;
 
 @Service
+@Transactional
 public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
 
     @Autowired
@@ -41,31 +44,51 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
         return ordenDeCompraRepository.findById(ordenId);
     }
 
-    public OrdenDeCompra createOrden(Long userId, List<FiestaDTO> fiestasDTO)
+    public OrdenDeCompra createOrden(String email, List<FiestaDTORequest> fiestasRequest, double descuento)
             throws OrdenDuplicateException, UserNotFoundException, FiestaNotFoundException {
 
-        Optional<User> optionalUser = userRepository.findById(userId);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty())
             throw new UserNotFoundException();
         else {
             User user = optionalUser.get();
-            int montoTotal = 0;
-            for (FiestaDTO fiestaDTO : fiestasDTO) {
-                Long fiestaDTOId = fiestaDTO.getFiesta().getId();
-                Optional<Fiesta> optionalFiesta = fiestaRepository.findById(fiestaDTOId);
+            String username = user.getName();
+            double montoParcial = 0;
+            double montoTotal = 0;
+
+            List<FiestaDTORequest> fiestasOrden = new ArrayList<FiestaDTORequest>();
+
+            // OrdenDeCompra ordenDeCompra = new OrdenDeCompra(null, user, email, username,
+            // new ArrayList<FiestaDTORequest>(), montoParcial, descuento, montoTotal);
+
+            for (FiestaDTORequest fiestaRequest : fiestasRequest) {
+
+                String fiestaDtoName = fiestaRequest.getName();
+                Optional<Fiesta> optionalFiesta = fiestaRepository.findByName(fiestaDtoName);
                 if (optionalFiesta.isEmpty())
                     throw new FiestaNotFoundException();
                 else {
                     Fiesta fiesta = optionalFiesta.get();
-                    montoTotal = montoTotal + fiesta.getPrice() * fiestaDTO.getCantidadEntradas();
-                    fiesta.setCantEntradas(fiesta.getCantEntradas() - fiestaDTO.getCantidadEntradas()); // actualiza
-                                                                                                        // stock de
-                                                                                                        // entradas
+                    montoParcial = montoParcial + fiesta.getPrice() * fiestaRequest.getCantidadEntradas();
+                    fiesta.setCantEntradas(fiesta.getCantEntradas() - fiestaRequest.getCantidadEntradas());
+                    fiestaRepository.save(fiesta); // acutalizo stock de entradas
 
-                    fiestaRepository.save(fiesta);
+                    // Crear una nueva instancia de FiestaDTORequest y asociarla con la orden de
+                    // compra
+                    // FiestaDTORequest newFiestaRequest = new FiestaDTORequest();
+                    // newFiestaRequest.setOrdenDeCompra(ordenDeCompra);
+                    // newFiestaRequest.setName(fiestaRequest.getName());
+                    // newFiestaRequest.setCantidadEntradas(fiestaRequest.getCantidadEntradas());
+                    // newFiestaRequest.setMontoParcial(fiesta.getPrice() *
+                    // fiestaRequest.getCantidadEntradas());
+                    // ordenDeCompra.getFiestas().add(newFiestaRequest);
                 }
             }
-            return ordenDeCompraRepository.save(new OrdenDeCompra(userId, fiestasDTO, montoTotal));
+            montoTotal = montoParcial - descuento;
+
+            // return ordenDeCompraRepository.save(ordenDeCompra);
+            return ordenDeCompraRepository.save(
+                    new OrdenDeCompra(null, user, email, username, fiestasOrden, montoParcial, descuento, montoTotal));
         }
     }
 

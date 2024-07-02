@@ -6,28 +6,19 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "fiestas")
 
 public class Fiesta {
-
-    public Fiesta() {
-
-    }
-
-    public Fiesta(String name, String fecha, String ubicacion, String image, int price, int cantEntradas,
-            boolean available) {
-        this.name = name;
-        this.fecha = fecha;
-        this.ubicacion = ubicacion;
-        this.image = image;
-        this.price = price;
-        this.cantEntradas = cantEntradas;
-        this.available = available;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

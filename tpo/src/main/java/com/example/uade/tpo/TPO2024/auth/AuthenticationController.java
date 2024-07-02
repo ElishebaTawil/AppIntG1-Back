@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.uade.tpo.TPO2024.exceptions.UserDuplicateException;
 import com.example.uade.tpo.TPO2024.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,13 +20,13 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request) {
+            @RequestBody RegisterRequest request) throws UserDuplicateException {
         return ResponseEntity.ok(service.register(request));
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request) {
+            @RequestBody AuthenticationRequest request) throws UserDuplicateException {
         return ResponseEntity.ok(service.authenticate(request));
     }
 }

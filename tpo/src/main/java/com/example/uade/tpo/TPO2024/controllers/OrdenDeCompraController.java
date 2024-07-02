@@ -3,6 +3,7 @@ package com.example.uade.tpo.TPO2024.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.uade.tpo.TPO2024.dto.OrdenDeCompraRequest;
 import com.example.uade.tpo.TPO2024.entity.OrdenDeCompra;
 import com.example.uade.tpo.TPO2024.entity.User;
 import com.example.uade.tpo.TPO2024.exceptions.FiestaNotFoundException;
@@ -50,11 +51,13 @@ public class OrdenDeCompraController {
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<OrdenDeCompra> createOrden(@RequestBody OrdenDeCompra ordenRequest)
+    public ResponseEntity<OrdenDeCompra> createOrden(@RequestBody OrdenDeCompraRequest ordenRequest)
             throws OrdenDuplicateException, UserNotFoundException, FiestaNotFoundException {
+
         OrdenDeCompra order = ordenDeCompraService.createOrden(
-                ordenRequest.getUser().getId(),
-                ordenRequest.getFiestas());
+                ordenRequest.getEmail(),
+                ordenRequest.getFiestas(),
+                ordenRequest.getDescuento());
         return ResponseEntity.created(URI.create("/ordenes/" + order.getId())).body(order);
     }
 

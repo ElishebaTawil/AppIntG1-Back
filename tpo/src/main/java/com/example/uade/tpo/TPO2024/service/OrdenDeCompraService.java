@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.uade.tpo.TPO2024.dto.FiestaDTO;
+import com.example.uade.tpo.TPO2024.dto.FiestaDTORequest;
 import com.example.uade.tpo.TPO2024.entity.Fiesta;
 import com.example.uade.tpo.TPO2024.entity.OrdenDeCompra;
 import com.example.uade.tpo.TPO2024.exceptions.FiestaNotFoundException;
@@ -17,7 +18,7 @@ public interface OrdenDeCompraService {
 
     public Optional<OrdenDeCompra> getOrdenById(Long ordenId);
 
-    OrdenDeCompra createOrden(Long userId, List<FiestaDTO> fiestas)
+    public OrdenDeCompra createOrden(String email, List<FiestaDTORequest> fiestasRequest, double descuento)
             throws OrdenDuplicateException, UserNotFoundException, FiestaNotFoundException;
 
     // public OrdenDeCompra updateOrden(Long id);

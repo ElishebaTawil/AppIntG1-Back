@@ -2,6 +2,7 @@ package com.example.uade.tpo.TPO2024.dto;
 
 import com.example.uade.tpo.TPO2024.entity.Fiesta;
 import com.example.uade.tpo.TPO2024.entity.OrdenDeCompra;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,32 +17,32 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//@Data
-//@Builder
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Entity
-public class FiestaDTO {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class FiestaDTORequest {
 
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @ManyToOne
-    // @JoinColumn(name = "orden_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "orden_id", nullable = false)
+    @JsonBackReference
     private OrdenDeCompra ordenDeCompra;
 
-    // @OneToOne
-    // @JoinColumn(name = "fiesta_id", referencedColumnName = "id")
-    // private Fiesta fiesta;
+    @OneToOne
+    @JoinColumn(name = "fiesta_id", referencedColumnName = "id")
+    private Fiesta fiesta;
 
-    // @Column
+    @Column
     private String name;
 
-    // @Column
+    @Column
     private int cantidadEntradas;
 
-    // @Column
-    private double montoParcial; // PRECIO * CANTIDAD
-
+    @Column
+    private int montoParcial;
 }
