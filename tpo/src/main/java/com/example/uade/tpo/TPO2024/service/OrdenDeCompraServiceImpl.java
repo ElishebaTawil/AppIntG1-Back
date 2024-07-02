@@ -17,14 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.uade.tpo.TPO2024.dto.FiestaDTORequest;
 import com.example.uade.tpo.TPO2024.entity.Fiesta;
+import com.example.uade.tpo.TPO2024.entity.FiestaAsociada;
 import com.example.uade.tpo.TPO2024.entity.OrdenDeCompra;
 import com.example.uade.tpo.TPO2024.repository.FiestaRepository;
-
+import com.example.uade.tpo.TPO2024.repository.FiestaRequestRepository;
 import com.example.uade.tpo.TPO2024.repository.OrdenDeCompraRepository;
 import com.example.uade.tpo.TPO2024.repository.UserRepository;
 
 @Service
-@Transactional
 public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
 
     @Autowired
@@ -44,6 +44,7 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
         return ordenDeCompraRepository.findById(ordenId);
     }
 
+    @Transactional
     public OrdenDeCompra createOrden(String email, List<FiestaDTORequest> fiestasRequest, double descuento)
             throws OrdenDuplicateException, UserNotFoundException, FiestaNotFoundException {
 
@@ -56,10 +57,7 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
             double montoParcial = 0;
             double montoTotal = 0;
 
-            List<FiestaDTORequest> fiestasOrden = new ArrayList<FiestaDTORequest>();
-
-            // OrdenDeCompra ordenDeCompra = new OrdenDeCompra(null, user, email, username,
-            // new ArrayList<FiestaDTORequest>(), montoParcial, descuento, montoTotal);
+            List<FiestaAsociada> fiestasAsociadas = new ArrayList<FiestaAsociada>();
 
             for (FiestaDTORequest fiestaRequest : fiestasRequest) {
 
@@ -73,22 +71,25 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
                     fiesta.setCantEntradas(fiesta.getCantEntradas() - fiestaRequest.getCantidadEntradas());
                     fiestaRepository.save(fiesta); // acutalizo stock de entradas
 
-                    // Crear una nueva instancia de FiestaDTORequest y asociarla con la orden de
-                    // compra
-                    // FiestaDTORequest newFiestaRequest = new FiestaDTORequest();
-                    // newFiestaRequest.setOrdenDeCompra(ordenDeCompra);
-                    // newFiestaRequest.setName(fiestaRequest.getName());
-                    // newFiestaRequest.setCantidadEntradas(fiestaRequest.getCantidadEntradas());
-                    // newFiestaRequest.setMontoParcial(fiesta.getPrice() *
-                    // fiestaRequest.getCantidadEntradas());
-                    // ordenDeCompra.getFiestas().add(newFiestaRequest);
+                    FiestaAsociada fiestaAsociada = new FiestaAsociada();
+                    fiestaAsociada.setName(fiesta.getName());
+                    fiestaAsociada.setCantidadEntradas(fiestaRequest.getCantidadEntradas());
+                    fiestaAsociada.setMontoParcial(fiesta.getPrice() * fiestaRequest.getCantidadEntradas());
+                    fiestasAsociadas.add(fiestaAsociada);
+
                 }
             }
             montoTotal = montoParcial - descuento;
 
-            // return ordenDeCompraRepository.save(ordenDeCompra);
-            return ordenDeCompraRepository.save(
-                    new OrdenDeCompra(null, user, email, username, fiestasOrden, montoParcial, descuento, montoTotal));
+            OrdenDeCompra ordenDeCompra = new OrdenDeCompra(null, user, email, username, fiestasAsociadas, montoParcial,
+                    descuento, montoTotal);
+
+            // Establecer la relación bidireccional
+            for (FiestaAsociada fiesta : fiestasAsociadas) {
+                fiesta.setOrdenDeCompra(ordenDeCompra);
+            }
+
+            return ordenDeCompraRepository.save(ordenDeCompra);
         }
     }
 

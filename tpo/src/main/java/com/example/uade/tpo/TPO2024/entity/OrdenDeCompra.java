@@ -48,7 +48,7 @@ public class OrdenDeCompra {
 
     @OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<FiestaDTORequest> fiestas;
+    private List<FiestaAsociada> fiestas;
 
     @Column
     private double montoParcial;
