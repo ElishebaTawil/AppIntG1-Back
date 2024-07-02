@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class FiestaDTO {
+public class FiestaDTORequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +42,5 @@ public class FiestaDTO {
     private int cantidadEntradas;
 
     @Column
-    private double montoParcial; // PRECIO * CANTIDAD
-
+    private int montoParcial;
 }

@@ -56,8 +56,10 @@ public class UserServiceImpl implements UserService {
     }
 
     public User createUser(String name, String email, String password, Role role) throws UserDuplicateException {
-        Optional<User> users = userRepository.findByEmail(email);
-        if (users.isEmpty()) {
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user.isEmpty()) {
+
             return userRepository.save(new User(null, name, email, password, role, null));
         }
         throw new UserDuplicateException();

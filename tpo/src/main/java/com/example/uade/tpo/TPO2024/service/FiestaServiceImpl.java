@@ -58,9 +58,10 @@ public class FiestaServiceImpl implements FiestaService {
             int cantEntradas,
             boolean available)
             throws FiestaDuplicateException {
-        List<Fiesta> fiestas = fiestaRepository.findByName(name);
-        if (fiestas.isEmpty()) {
-            return fiestaRepository.save(new Fiesta(name, fecha, ubicacion, image, price, cantEntradas, available));
+        Optional<Fiesta> fiesta = fiestaRepository.findByName(name);
+        if (fiesta.isEmpty()) {
+            return fiestaRepository
+                    .save(new Fiesta(null, name, fecha, ubicacion, image, price, cantEntradas, available));
         }
         throw new FiestaDuplicateException();
     }

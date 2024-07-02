@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.uade.tpo.TPO2024.dto.FiestaDTO;
+import com.example.uade.tpo.TPO2024.dto.FiestaDTORequest;
 import com.example.uade.tpo.TPO2024.entity.Fiesta;
 import com.example.uade.tpo.TPO2024.entity.OrdenDeCompra;
 import com.example.uade.tpo.TPO2024.repository.FiestaRepository;
@@ -41,31 +42,49 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
         return ordenDeCompraRepository.findById(ordenId);
     }
 
-    public OrdenDeCompra createOrden(Long userId, List<FiestaDTO> fiestasDTO)
+    public OrdenDeCompra createOrden(String email, List<FiestaDTORequest> fiestasRequest, double descuento)
             throws OrdenDuplicateException, UserNotFoundException, FiestaNotFoundException {
 
-        Optional<User> optionalUser = userRepository.findById(userId);
+        // Log inicio del método
+        System.out.println("Iniciando creación de orden");
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty())
             throw new UserNotFoundException();
         else {
             User user = optionalUser.get();
-            int montoTotal = 0;
-            for (FiestaDTO fiestaDTO : fiestasDTO) {
-                Long fiestaDTOId = fiestaDTO.getFiesta().getId();
-                Optional<Fiesta> optionalFiesta = fiestaRepository.findById(fiestaDTOId);
+            String username = user.getName();
+            double montoParcial = 0;
+
+            // Log usuario encontrado
+            System.out.println("Usuario encontrado: " + user);
+
+            for (FiestaDTORequest fiestaRequest : fiestasRequest) {
+                String fiestaDtoName = fiestaRequest.getName();
+                Optional<Fiesta> optionalFiesta = fiestaRepository.findByName(fiestaDtoName);
                 if (optionalFiesta.isEmpty())
                     throw new FiestaNotFoundException();
                 else {
+                    System.out.println("Fiesta no encontrada: " + fiestaDtoName);
                     Fiesta fiesta = optionalFiesta.get();
-                    montoTotal = montoTotal + fiesta.getPrice() * fiestaDTO.getCantidadEntradas();
-                    fiesta.setCantEntradas(fiesta.getCantEntradas() - fiestaDTO.getCantidadEntradas()); // actualiza
-                                                                                                        // stock de
-                                                                                                        // entradas
+                    montoParcial = montoParcial + fiesta.getPrice() * fiestaRequest.getCantidadEntradas();
+                    fiesta.setCantEntradas(fiesta.getCantEntradas() - fiestaRequest.getCantidadEntradas());
+                    // Log actualización de fiesta
+                    System.out.println("Actualizando fiesta: " + fiesta);
+                    fiestaRepository.save(fiesta); // acutalizo stock de entradas
 
-                    fiestaRepository.save(fiesta);
                 }
+
             }
-            return ordenDeCompraRepository.save(new OrdenDeCompra(userId, fiestasDTO, montoTotal));
+            double montoTotal = 0;
+            montoTotal = montoParcial - descuento;
+            // Log montos calculados
+            System.out.println(
+                    "Monto parcial: " + montoParcial + ", Descuento: " + descuento + ", Monto total: " + montoTotal);
+
+            return ordenDeCompraRepository.save(
+                    new OrdenDeCompra(null, user, email, username, fiestasRequest, montoParcial, descuento,
+                            montoTotal));
         }
     }
 
