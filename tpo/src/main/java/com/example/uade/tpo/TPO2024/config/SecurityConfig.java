@@ -10,6 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -38,5 +41,22 @@ public class SecurityConfig {
                                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();
+        }
+
+        @Bean
+        public CorsFilter corsFilter() {
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowCredentials(true);
+                config.addAllowedOrigin("http://localhost:3000"); // Permitir solicitudes desde este origen
+                config.addAllowedHeader("*");
+                config.addAllowedMethod("GET"); // Permitir el método GET
+                config.addAllowedMethod("POST"); // Permitir el método POST
+                config.addAllowedMethod("PUT");
+                config.addAllowedMethod("DELETE");
+
+                // Agrega otros métodos según los que necesites (PUT, DELETE, etc.)
+                source.registerCorsConfiguration("/**", config);
+                return new CorsFilter(source);
         }
 }

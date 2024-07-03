@@ -37,6 +37,12 @@ public class Fiesta {
     private String fecha;
 
     @Column
+    private String hora;
+
+    @Column
+    private String lugar;
+
+    @Column
     private String ubicacion;
 
     @Column

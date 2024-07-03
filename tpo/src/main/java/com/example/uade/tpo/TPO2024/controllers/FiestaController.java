@@ -25,6 +25,7 @@ import java.util.Optional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@CrossOrigin(origins = { "*" }, maxAge = 4800, allowCredentials = "false")
 @RestController
 @RequestMapping("/api/fiestas")
 public class FiestaController {
@@ -65,8 +66,11 @@ public class FiestaController {
     @PostMapping("/agregar")
     public ResponseEntity<Object> createFiesta(@RequestBody Fiesta fiestaRequest)
             throws FiestaDuplicateException {
+        System.out.println("LLEGO EL FETCH:" + fiestaRequest);
         Fiesta result = fiestaService.createFiesta(fiestaRequest.getName(),
-                fiestaRequest.getFecha(), fiestaRequest.getUbicacion(), fiestaRequest.getImage(),
+                fiestaRequest.getFecha(), fiestaRequest.getHora(), fiestaRequest.getLugar(),
+                fiestaRequest.getUbicacion(),
+                fiestaRequest.getImage(),
                 fiestaRequest.getPrice(), fiestaRequest.getCantEntradas(), fiestaRequest.isAvailable());
         return ResponseEntity.created(URI.create("/fiestas/" + result.getId())).body(result);
     }

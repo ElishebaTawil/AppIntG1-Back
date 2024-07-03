@@ -17,6 +17,7 @@ import com.example.uade.tpo.TPO2024.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = { "*" }, maxAge = 4800, allowCredentials = "false")
 @RestController
 @RequestMapping("/api/ordenes")
 
@@ -53,7 +55,7 @@ public class OrdenDeCompraController {
     @PostMapping("/crear")
     public ResponseEntity<OrdenDeCompra> createOrden(@RequestBody OrdenDeCompraRequest ordenRequest)
             throws OrdenDuplicateException, UserNotFoundException, FiestaNotFoundException {
-
+        System.out.println("-----LLEGO EL FETCH------" + ordenRequest);
         OrdenDeCompra order = ordenDeCompraService.createOrden(
                 ordenRequest.getEmail(),
                 ordenRequest.getFiestas(),

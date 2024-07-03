@@ -77,6 +77,8 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
                     fiestaAsociada.setMontoParcial(fiesta.getPrice() * fiestaRequest.getCantidadEntradas());
                     fiestasAsociadas.add(fiestaAsociada);
 
+                    System.out.println("EL MONTO PARCIAL ES: " + montoParcial);
+
                 }
             }
             montoTotal = montoParcial - descuento;
