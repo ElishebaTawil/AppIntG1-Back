@@ -54,14 +54,15 @@ public class FiestaServiceImpl implements FiestaService {
                 .collect(Collectors.toList());
     }
 
-    public Fiesta createFiesta(String name, String fecha, String ubicacion, String image, int price,
+    public Fiesta createFiesta(String name, String fecha, String hora, String lugar, String ubicacion, String image,
+            int price,
             int cantEntradas,
             boolean available)
             throws FiestaDuplicateException {
         Optional<Fiesta> fiesta = fiestaRepository.findByName(name);
         if (fiesta.isEmpty()) {
             return fiestaRepository
-                    .save(new Fiesta(null, name, fecha, ubicacion, image, price, cantEntradas, available));
+                    .save(new Fiesta(null, name, fecha, hora, lugar, ubicacion, image, price, cantEntradas, available));
         }
         throw new FiestaDuplicateException();
     }
@@ -72,6 +73,8 @@ public class FiestaServiceImpl implements FiestaService {
             Fiesta fiestaPorActualizar = fiestaOptional.get(); // convierto de Optional a Fiesta
             fiestaPorActualizar.setName(fiestaActualizada.getName());
             fiestaPorActualizar.setFecha(fiestaActualizada.getFecha());
+            fiestaPorActualizar.setHora(fiestaActualizada.getHora());
+            fiestaPorActualizar.setLugar(fiestaActualizada.getLugar());
             fiestaPorActualizar.setUbicacion(fiestaActualizada.getUbicacion());
             fiestaPorActualizar.setImage(fiestaActualizada.getImage());
             fiestaPorActualizar.setPrice(fiestaActualizada.getPrice());

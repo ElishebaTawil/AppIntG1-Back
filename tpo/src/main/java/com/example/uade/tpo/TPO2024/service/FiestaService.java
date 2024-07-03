@@ -19,7 +19,8 @@ public interface FiestaService {
 
     public List<Fiesta> getFiestasOrdenadasPorPrecioDeMayorAMenor();
 
-    public Fiesta createFiesta(String name, String fecha, String ubicacion, String image, int price,
+    public Fiesta createFiesta(String name, String fecha, String hora, String lugar, String ubicacion, String image,
+            int price,
             int cantEntradas,
             boolean available)
             throws FiestaDuplicateException;
